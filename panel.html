@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <script>
+        //this script is responsible for the scroll down behavior of the page
+        //first we need to add the botton the the top navigation bar and then 
+        // add a listenner to launch and stop the scrolling
+        var pos = 0
+        var doc = document.getElementsByClassName('view')[0]
+        var height = parseInt(document.getElementsByClassName('react-grid-layout layout')[0].style.height.slice(0, -2));
+        document.getElementsByClassName('view')[0].addEventListener("scroll", evt =>
+            pos = evt.target.scrollTop
+        )
+        function pageScroll(scroll) {
+            if (scroll === true) {
+                document.getElementsByClassName('view')[0].scrollTop += 1;
+                var maxHeight = window.screen.height,
+                    maxWidth = window.screen.width,
+                    curHeight = window.innerHeight,
+                    curWidth = window.innerWidth;
+                if (maxWidth == curWidth && maxHeight == curHeight) {
+                    w = 740
+                } else {
+                    e = 640
+                }
+                height = parseInt(document.getElementsByClassName('react-grid-layout layout')[0].style.height.slice(0, -2));
+                if ((height - pos) < window.innerHeight) {
+                    location.reload(true);
+                    document.getElementsByClassName('view')[0].scrollTop -= height;
+                }
+                scrolldelay = setTimeout(function () {
+                    pageScroll(true);
+                }, 10);
+            } else {
+                clearTimeout(scrolldelay);
+                return;
+            }
+        }
+    </script>
+    <style>
+        button#playButton {
+            background-color: #141619;
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: center;
+            -webkit-align-items: center;
+            -ms-flex-align: center;
+            align-items: center;
+            font-weight: 500;
+            padding: 0 8px;
+            height: 32px;
+            line-height: 30px;
+            color: #7b8087;
+            border: 1px solid #2f2f32;
+            margin-left: 4px;
+            white-space: nowrap;
+      }
+    </style>
+</head>
+
+<body>
+    <script>
+        if (!document.getElementById('playButton')) {
+            var svgIcon = "<button class='btn navbar-button navbar-button--play' id='playButton' aria-label='Dashboard navigation bar button Play'><div class='css-1vzus6i-Icon'><svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' aria-hidden='true' focusable='false' width='1em' height='1em' style='-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);' preserveAspectRatio='xMidYMid meet' viewBox='0 0 24 24'><path d='M8 5.14v14l11-7l-11-7z' fill='#626262' /></svg></div></button>"
+            var svgIconElem = new DOMParser().parseFromString(svgIcon, "text/xml");
+            var target = document.getElementsByClassName('navbar-buttons navbar-buttons--actions')[1]
+            target.insertBefore(svgIconElem.documentElement, target.children[2]);
+        }
+        var doc = document.getElementById('playButton')
+        doc.addEventListener("click", myFunction);
+        var name;
+        function myFunction() {
+            var doc = document.getElementById('playButton')
+            name = doc.firstChild.firstChild.firstChild.getAttribute("d")
+            if (name == 'M14 19h4V5h-4M6 19h4V5H6v14z') {
+                doc.firstChild.firstChild.firstChild.setAttribute("d", "M8 5.14v14l11-7l-11-7z")
+                pageScroll(false)
+            } else {
+                pageScroll(true)
+                doc.firstChild.firstChild.firstChild.setAttribute("d", "M14 19h4V5h-4M6 19h4V5H6v14z")
+            }
+        }
+        function sleep(time) {
+            return new Promise((resolve) => setTimeout(resolve, time));
+        }
+        sleep(30000).then(() => {
+            myFunction()
+        });
+
+    </script>
+</body>
+
+</html>
